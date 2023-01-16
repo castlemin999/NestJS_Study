@@ -3,6 +3,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { User } from "./user.entity";
 import { UserRepository } from "./user.repository";
+import * as config from 'config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy){
@@ -10,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
     private userRepository: UserRepository
   ){
     super({
-      secretOrKey: 'Secret1234', // Token과 같은 SecretKey, Token이 유효한지 확인
+      secretOrKey: process.env.JWT_SECRET || config.get('jwt.secret'), // Token과 같은 SecretKey, Token이 유효한지 확인
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() // Token이 어디서 오는지 확인
     });
   }
